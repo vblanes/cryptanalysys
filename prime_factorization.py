@@ -22,7 +22,7 @@ def fermat(n):
     while not sqrt(b).is_integer():
         a += 1
         b = (a**2)-n
-    return (a-sqrt(b), a+sqrt(b))
+    return a-sqrt(b)
 
 def pollards_rho(n):
     '''
