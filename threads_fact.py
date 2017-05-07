@@ -18,10 +18,12 @@ def compute(n):
     thread2 = facthreads(pollards_rho, n, 'rho:')
     thread3 = facthreads(pollards_pm1, n, 'pm1:')
 
+
     # Start new Threads
     thread1.start()
     thread2.start()
     thread3.start()
+
     '''
     thread1.join()
     thread2.join()

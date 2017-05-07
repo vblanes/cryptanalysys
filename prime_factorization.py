@@ -4,26 +4,29 @@ based on primes factorization
 
 Vicent Blanes <viblasel@gmail.com>
 '''
-
-from math import ceil, sqrt
-from fractions import gcd
+from decimal import *
+from math import ceil, sqrt, gcd
 from random import randint
+from numba import jit
 
+
+@jit
 def fermat(n):
     '''
     Require: N, product of 2 primes
     Ensure: Factors A and B from N
-
     Recomended if factors values are close
     '''
-    a = ceil(sqrt(n))
+    n = Decimal(n)
+    a = n.sqrt().to_integral_exact()
     b = (a**2)-n
     # while b is not a perfect square
-    while not sqrt(b).is_integer():
+    while not (b.sqrt() % 1 == 0):
         a += 1
         b = (a**2)-n
-    return a-sqrt(b)
+    return a-int(b.sqrt())
 
+@jit
 def pollards_rho(n):
     '''
     Require: N, product of 2 primes
@@ -37,6 +40,7 @@ def pollards_rho(n):
         p = gcd(a-b, n)
         if p > 1 and p <= n:
             return p
+@jit
 def pollards_pm1(n):
     '''
     Require: N, product of 2 primes
