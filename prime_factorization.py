@@ -30,9 +30,10 @@ def fermat_decimal(n):
     Ensure: Factors A and B from N
     Recomended if factors values are close
     '''
+    context = getcontext()
     n = Decimal(n)
     a = n.sqrt().to_integral_exact(rounding=ROUND_CEILING)
-    b = Decimal((a**2)-n)
+    b = Decimal((context.power(a,2))-n)
     # while b is not a perfect square
     while True:
         aux = b.sqrt()

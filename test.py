@@ -21,4 +21,4 @@ espill2 = 4884939707479210164515282450044558913586084486551412092312394062402262
 #print(pollards_rho(n))
 #print(pollards_pm1(n))
 #print(sip(n**10))
-compute(rsa100)
+compute(espill2)
