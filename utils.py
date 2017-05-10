@@ -11,6 +11,7 @@ def simple_is_prime(n):
     """
     Returns True if n is prime.
     Useless for big numbers
+    code from: 
     """
     if n == 2:
         return True
@@ -33,41 +34,43 @@ def simple_is_prime(n):
 
     return True
 
-'''
-Functions for Miller-Rabin test
-'''
 
-def decompose(n):
-   exponentOfTwo = 0
+def miller_rabin_test(n, k=300):
+    '''
+    Miller-Rabin Primality Test
+    Code from: https://rosettacode.org/wiki/Miller%E2%80%93Rabin_primality_test#Python
+    '''
+    assert n >= 2
+    # special case 2
+    if n == 2:
+        return True
+    # ensure n is odd
+    if n % 2 == 0:
+        return False
+    # write n-1 as 2**s * d
+    # repeatedly try to divide n-1 by 2
+    s = 0
+    d = n-1
+    while True:
+        quotient, remainder = divmod(d, 2)
+        if remainder == 1:
+            break
+        s += 1
+        d = quotient
+    assert(2**s * d == n-1)
 
-   while n % 2 == 0:
-      n = n/2
-      exponentOfTwo += 1
+    # test the base a to see whether it is a witness for the compositeness of n
+    def try_composite(a):
+        if pow(a, d, n) == 1:
+            return False
+        for i in range(s):
+            if pow(a, 2**i * d, n) == n-1:
+                return False
+        return True # n is definitely composite
 
-   return exponentOfTwo, n
+    for i in range(k):
+        a = random.randrange(2, n)
+        if try_composite(a):
+            return False
 
-def isWitness(possibleWitness, p, exponent, remainder):
-   possibleWitness = pow(possibleWitness, remainder, p)
-   if possibleWitness == 1 or possibleWitness == p - 1:
-      return False
-
-   for _ in range(exponent):
-      possibleWitness = pow(possibleWitness, 2, p)
-
-      if possibleWitness == p - 1:
-         return False
-
-   return True
-
-def miller_rabin_test(p, accuracy=100):
-   if p == 2 or p == 3: return True
-   if p < 2: return False
-
-   exponent, remainder = decompose(p - 1)
-
-   for _ in range(accuracy):
-      possibleWitness = random.randint(2, p - 2)
-      if isWitness(possibleWitness, p, exponent, remainder):
-         return False
-
-   return True
+    return True

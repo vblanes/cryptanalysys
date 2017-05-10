@@ -7,26 +7,42 @@ Vicent Blanes <viblasel@gmail.com>
 from decimal import *
 from math import ceil, sqrt, gcd
 from random import randint
-from numba import jit
 
 
-@jit
 def fermat(n):
     '''
     Require: N, product of 2 primes
     Ensure: Factors A and B from N
     Recomended if factors values are close
     '''
-    n = Decimal(n)
-    a = n.sqrt().to_integral_exact()
-    b = (a**2)-n
+    a = ceil(sqrt(n))
+    b = int(a**2)-n
     # while b is not a perfect square
-    while not (b.sqrt() % 1 == 0):
+    while not (sqrt(b).is_integer()):
         a += 1
         b = (a**2)-n
-    return a-int(b.sqrt())
+    return a-int(sqrt(b))
 
-@jit
+
+def fermat_decimal(n):
+    '''
+    Require: N, product of 2 primes
+    Ensure: Factors A and B from N
+    Recomended if factors values are close
+    '''
+    n = Decimal(n)
+    a = n.sqrt().to_integral_exact(rounding=ROUND_CEILING)
+    b = Decimal((a**2)-n)
+    # while b is not a perfect square
+    while True:
+        aux = b.sqrt()
+        if int(aux) == aux:
+            return int(a-aux)
+        a += 1
+        b = (a**2)-n
+
+
+
 def pollards_rho(n):
     '''
     Require: N, product of 2 primes
@@ -40,7 +56,7 @@ def pollards_rho(n):
         p = gcd(a-b, n)
         if p > 1 and p <= n:
             return p
-@jit
+
 def pollards_pm1(n):
     '''
     Require: N, product of 2 primes
@@ -63,3 +79,4 @@ def pollards_pm1(n):
         if d == n:
             return None
         k += 1
+#############################################
